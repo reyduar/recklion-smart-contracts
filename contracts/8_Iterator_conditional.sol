@@ -27,6 +27,19 @@ contract IteratorsConditionals {
         return sum;
     }
 
-    // 
+    function mathOperations(string memory operation, uint a, uint b) public pure returns (uint) {
+        bytes32 operationHash = keccak256(abi.encodePacked(operation));
+        if (operationHash == keccak256(abi.encodePacked("sum"))) {
+            return a + b;
+        } else if (operationHash == keccak256(abi.encodePacked("sub"))) {
+            return a - b;
+        } else if (operationHash == keccak256(abi.encodePacked("mul"))) {
+            return a * b;
+        } else if (operationHash == keccak256(abi.encodePacked("div"))) {
+            return a / b;
+        } else {
+            return 0;
+        }
+    }        
 
 }

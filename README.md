@@ -1,1 +1,3 @@
-# Recklion Solidity Smart Ccontracts
+# ─────────────────────────────────────────────
+# Remix IDE Solidity Smart Contracts Project 
+# ─────────────────────────────────────────────
