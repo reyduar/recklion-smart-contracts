@@ -16,7 +16,7 @@ contract ArtToken is ERC721, Ownable {
     uint256 COUNTER;
 
     // Pricing of NFT tokens (price of the artwork)
-    uint256 fee = 5 ether;
+    uint256 public fee = 5 ether;
 
     // Data structure with the properties of the artwork
     struct Artwork {
@@ -52,4 +52,54 @@ contract ArtToken is ERC721, Ownable {
         emit NewArtwork(msg.sender, COUNTER, ranDna);
         COUNTER++;
     }
+
+    // NTF Token Price Update
+    function updatePrice(uint256 _newPrice) external onlyOwner {
+        fee = _newPrice;
+    }
+
+    // Visualize the balance of Smart Contract (ethers)
+    function infoSmartContract() public view onlyOwner returns (address, uint256) {
+        address scAddress = address(this);
+        // convert wei to ether totalwei / 10ˆ18
+        uint scMoney = address(this).balance / 10**18;
+        return (scAddress, scMoney);
+    }
+
+    // Obtainig all created NFT tokens (get all of artworks)
+    function getAllArtworks(address _owner) public view returns (Artwork[] memory) {
+        Artwork[] memory results = new Artwork[](balanceOf(_owner));
+        uint256 counterOwner = 0;
+        for (uint256 i = 0; i < COUNTER; i++) {
+            if (ownerOf(i) == _owner) {
+                results[counterOwner] = artWorksStore[i];
+                counterOwner++;
+            }
+        }
+        return artWorksStore;
+    }
+
+    /* NFT Token Development */
+
+    // NFT Token Payment
+    function createRandomArtwork(string memory _name) public payable {
+        require(msg.value == fee, "You need to pay the fee");
+        _createArtwork(_name);
+    }
+
+    // Extraction of ethers from the Smart Contract to the Owner
+    function withdraw() external payable onlyOwner {
+        address payable _owner = payable(owner());
+        _owner.transfer(address(this).balance);
+    }
+
+    // Level up NFT Token
+    function levelUp(uint256 _id) public {
+        // require(msg.value == fee, "You need to pay the fee"); /* Needs to set function as a payable */
+        require(ownerOf(_id) == msg.sender, "You are not the owner of this artwork");
+        Artwork storage artwork = artWorksStore[_id];
+        artwork.level++;
+    }
+
+
 }
